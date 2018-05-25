@@ -334,9 +334,9 @@ class TextureModder(BaseModder):
         vertical = bool(self.random_state.uniform() > 0.5)
         return self.set_gradient(name, rgb1, rgb2, vertical=vertical)
 
-    def rand_rgb(self, name):
-        rgb = self.get_rand_rgb()
-        return self.set_rgb(name, rgb)
+    def rand_rgb(self, name, rgb=(1, 1, 1)):
+        rgbval = self.get_rand_rgb(rgb=rgb)
+        return self.set_rgb(name, rgbval)
 
     def rand_noise(self, name):
         fraction = 0.1 + self.random_state.uniform() * 0.8
@@ -371,13 +371,22 @@ class TextureModder(BaseModder):
         else:
             self.model.mat_rgba[:] = 1.0
 
-    def get_rand_rgb(self, n=1):
-        def _rand_rgb():
-            return np.array(self.random_state.uniform(size=3) * 255,
-                            dtype=np.uint8)
+    def get_rand_rgb(self, n=1, rgb=(1, 1, 1)):
+        def _rand_rgb(rgb=(1, 1, 1)):
+            if rgb == (1, 0, 0):
+                rgbval = np.array(self.random_state.uniform(size=np.sum(rgb)) * 130 + 125,
+                    dtype=np.uint8)
+            else:
+                rgbval = np.array(self.random_state.uniform(size=np.sum(rgb)) * 255,
+                    dtype=np.uint8)
+
+            for i, val in enumerate(rgb):
+                if val: continue
+                rgbval = np.insert(rgbval, i, 0)
+            return rgbval
 
         if n == 1:
-            return _rand_rgb()
+            return _rand_rgb(rgb)
         else:
             return tuple(_rand_rgb() for _ in range(n))
 
