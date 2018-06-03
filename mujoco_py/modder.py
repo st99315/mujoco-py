@@ -374,7 +374,7 @@ class TextureModder(BaseModder):
     def get_rand_rgb(self, n=1, rgb=(1, 1, 1)):
         def _rand_rgb(rgb=(1, 1, 1)):
             if rgb == (1, 0, 0):
-                rgbval = np.array(self.random_state.uniform(size=np.sum(rgb)) * 130 + 125,
+                rgbval = np.array(self.random_state.uniform(size=np.sum(rgb)) * 95 + 160,
                     dtype=np.uint8)
             else:
                 rgbval = np.array(self.random_state.uniform(size=np.sum(rgb)) * 255,
